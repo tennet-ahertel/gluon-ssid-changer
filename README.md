@@ -12,24 +12,22 @@ Adapt and add this block to your site.conf:
 
 ```
 ssid_changer = {
-    switch_timeframe = 1,   -- only once every timeframe (in minutes) the SSID will change to OFFLINE 
-                            -- set to 1440 to change once a day
-                            -- set to 1 minute to change every time the router gets offline
-    first = 5,              -- the first few minutes directly after reboot within which an Offline-SSID always may be activated
-    prefix = 'FF_OFFLINE_', -- use something short to leave space for the nodename (no '~' allowed!)
-    suffix = 'nodename',    -- generate the ssid with either 'nodename', 'mac' or to use only the prefix: 'none'
-    
-    limits = {
-      disabled = false,     -- if true, the offline ssid will only be set if there is no gateway reacheable
-      -- upper and lower limit to turn the offline_ssid on and off
-      -- in-between these two values the SSID will never be changed to preven it from toggeling every Minute.
-      tq_max = '55',        -- upper limit, above that the online SSID will be used
-      tq_min = '45'         -- lower limit, below that the offline SSID will be used
-    },
+  switch_timeframe = 1,   -- only once every timeframe (in minutes) the SSID will change to OFFLINE 
+                          -- set to 1440 to change once a day
+                          -- set to 1 minute to change every time the router gets offline
+  first = 5,              -- the first few minutes directly after reboot within which an Offline-SSID always may be activated
+  prefix = 'FF_OFFLINE_', -- use something short to leave space for the nodename (no '~' allowed!)
+  suffix = 'nodename',    -- generate the SSID with either 'nodename', 'mac' or to use only the prefix: 'none'
+  
+  tq_limit_enabled = 0,   -- if false, the offline SSID will only be set if there is no gateway reacheable
+                          -- upper and lower limit to turn the offline_ssid on and off
+                          -- in-between these two values the SSID will never be changed to prevent it from toggeling every minute.
+  tq_limit_max = '55',    -- upper limit, above that the online SSID will be used
+  tq_limit_min = '45'     -- lower limit, below that the offline SSID will be used
 },
 ```
 
-if limits are disabled, then it will be only checked, if the gateway is reachable with
+if tq_limit is disabled, then it will be only checked, if the gateway is reachable with
 
     batctl gwl -H
 
