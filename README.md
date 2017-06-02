@@ -5,13 +5,39 @@ This script changes the SSID when there is no connection to the selected Gateway
 
 Once a minute it checks if there's still a gateway reachable with 
 
+site.conf
+=========
+
+Adapt and add this block to your site.conf: 
+
+```
+ssid_changer = {
+    switch_timeframe = 1,   -- only once every timeframe (in minutes) the SSID will change to OFFLINE 
+                            -- set to 1440 to change once a day
+                            -- set to 1 minute to change every time the router gets offline
+    first = 5,              -- the first few minutes directly after reboot within which an Offline-SSID always may be activated
+    prefix = 'FF_OFFLINE_', -- use something short to leave space for the nodename (no '~' allowed!)
+    suffix = 'nodename',    -- generate the ssid with either 'nodename', 'mac' or to use only the prefix: 'none'
+    
+    limits = {
+      disabled = false,     -- if true, the offline ssid will only be set if there is no gateway reacheable
+      -- upper and lower limit to turn the offline_ssid on and off
+      -- in-between these two values the SSID will never be changed to preven it from toggeling every Minute.
+      tq_max = '55',        -- upper limit, above that the online SSID will be used
+      tq_min = '45'         -- lower limit, below that the offline SSID will be used
+    },
+},
+```
+
+if limits are disabled, then it will be only checked, if the gateway is reachable with
+
     batctl gwl -H
 
-and then decides if a change of the SSID is necessary: There is a variable
-MINUTES (default 1440 = 24h) at the top of the script `files/lib/gluon/ssid-changer/ssid-changer.sh`
-that defines a time interval in which a successful check that detects an offline
-state is allowed to change the SSID once to "FF_OFFLINE_$node_hostname". Only the
-first few (also definable in a variable FIRST) minutes the OFFLINE_SSID may also
+
+Depending on the connectivity, it will be decided if a change of the SSID is necessary: There is a variable
+`switch_timeframe` (for ex.  1440 = 24h) that defines a time interval after which a successful check that detects an offline
+state will result in a single change of the SSID to "FF_OFFLINE_$node_hostname". Only the
+first few (also definable in a variable `first`) minutes the OFFLINE_SSID may also
 be set. All other minutes a checks will just be reported in the log and whenever
 an online state is detected the SSID will be set back immediately back to normal. 
 
