@@ -65,7 +65,6 @@ git clone https://github.com/Freifunk-Nord/gluon-ssid-changer.git ssid-changer
 cd ssid-changer/gluon-ssid-changer/
 git checkout master
 scp -r files/* $LOGIN:/
-scp luasrc/lib/gluon/upgrade/500-ssid-changer $LOGIN:/lib/gluon/upgrade/
 ssh $ROUTER_IP "/lib/gluon/upgrade/500-ssid-changer;" \
   "uci set ssid-changer.settings.switch_timeframe='3';" \
   "uci set ssid-changer.settings.first='3';" \
@@ -73,12 +72,6 @@ ssh $ROUTER_IP "/lib/gluon/upgrade/500-ssid-changer;" \
   "uci show ssid-changer;" \
   "/etc/init.d/micrond reload;"
 ```
-
-logread |grep -v "fastd" & logread -f |grep -v "fastd"
-
-cd /var/www/freifunk/firmware/ffki/rc/
-router_ip+=fda1:384a:74de:4242:62e3:27ff:fe2a:67d6;
-
 
 Gluon versions
 ==============
@@ -92,7 +85,7 @@ Create a file "modules" with the following content in your site directory:
 ```
 GLUON_SITE_FEEDS="ssidchanger"
 PACKAGES_SSIDCHANGER_REPO=https://github.com/freifunk-nord/gluon-ssid-changer.git
-PACKAGES_SSIDCHANGER_COMMIT=614d2f5ac45a424057d7171f80716acf6cad63e1 # <-- set the newest commit ID here
+PACKAGES_SSIDCHANGER_COMMIT=384715c09b94f4b35099eeca27c2af0ed54a8a5d # <-- set the newest commit ID here
 PACKAGES_SSIDCHANGER_BRANCH=master
 ```
 
